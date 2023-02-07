@@ -27,5 +27,13 @@ fn startup() {
       \/  \/ \__,_|\__, |_| |_|_| |_|\__,_|\___|_|   
                    |___/                             "#;
     println!("{} v{}", &ascii_name, &env!("CARGO_PKG_VERSION"));
-    println!("================================================================")
+    println!("================================================================");
+
+
+CombinedLogger::init(
+        vec![
+            TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
+            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("my_rust_binary.log").unwrap()),
+        ]
+    ).unwrap();
 }
