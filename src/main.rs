@@ -4,6 +4,7 @@ use wayfinder_shared::{Config, WayfindError};
 
 #[tokio::main]
 async fn main() {
+    startup();
     let c = Config {
         auth_key: Some("".to_owned()),
         auth_secret: "".to_owned(),
@@ -16,4 +17,15 @@ async fn main() {
         eprintln!("{}", e);
         exit(1);
     }
+}
+
+fn startup() {
+    let ascii_name = r#"     __    __             __ _           _           
+    / / /\ \ \__ _ _   _ / _(_)_ __   __| | ___ _ __ 
+    \ \/  \/ / _` | | | | |_| | '_ \ / _` |/ _ \ '__|
+     \  /\  / (_| | |_| |  _| | | | | (_| |  __/ |   
+      \/  \/ \__,_|\__, |_| |_|_| |_|\__,_|\___|_|   
+                   |___/                             "#;
+    println!("{} v{}", &ascii_name, &env!("CARGO_PKG_VERSION"));
+    println!("================================================================")
 }
