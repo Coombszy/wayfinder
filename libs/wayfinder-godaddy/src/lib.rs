@@ -1,7 +1,7 @@
 use std::thread;
 use std::time::Duration;
 
-use godaddy::{get_domain_record, DomainData};
+use godaddy::get_domain_record;
 use log::info;
 use thiserror::Error;
 use wayfinder_shared::{get_external_ip, Config, IpifyError, WayfindError};
@@ -53,7 +53,7 @@ async fn tick(config: &Config) -> Result<(), WayfindError<GodaddyError>> {
             Err(e) => return Err(WayfindError::Godaddy(e)),
         };
 
-        /// If any of the entries need updating update all!
+        // If any of the entries need updating update all!
         for mut entry in entries.iter_mut() {
             if entry.data != external {
                 info!(

@@ -1,5 +1,5 @@
-use log::{debug, info};
-use reqwest;
+use log::{debug};
+
 use serde::{Deserialize, Serialize};
 use wayfinder_shared::Config;
 
@@ -100,9 +100,9 @@ pub async fn update_domain_records(
     debug!("Response: {:?}", response);
 
     if !response.status().is_success() {
-        return Err(GodaddyError::GenericHttp(response.status().to_string()));
+        Err(GodaddyError::GenericHttp(response.status().to_string()))
     } else {
-        return Ok(());
+        Ok(())
     }
 }
 

@@ -1,8 +1,8 @@
-use std::{error::Error, process::exit};
+use std::{process::exit};
 
 use log::{error, LevelFilter};
 use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode};
-use wayfinder_shared::{Config, WayfindError};
+use wayfinder_shared::{Config};
 
 #[tokio::main]
 async fn main() {
