@@ -1,4 +1,4 @@
-use log::{debug};
+use log::debug;
 
 use serde::{Deserialize, Serialize};
 use wayfinder_shared::Config;
@@ -32,7 +32,7 @@ pub async fn get_all_domains(config: &Config) -> Result<(), GodaddyError> {
     if !response.status().is_success() {
         // Throw a nicer error
         if response.status() == 401 {
-            return Err(GodaddyError::Auth());
+            return Err(GodaddyError::Auth);
         } else {
             return Err(GodaddyError::GenericHttp(response.status().to_string()));
         }

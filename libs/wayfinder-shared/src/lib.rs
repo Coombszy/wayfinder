@@ -1,10 +1,10 @@
-use log::{debug};
+use log::debug;
 use thiserror::Error;
 
 const IPIFY: &str = "https://api.ipify.org";
 
 #[derive(Error, Debug)]
-pub enum WayfindError<T> {
+pub enum WayfinderError<T> {
     #[error("{0}")]
     Ipify(T),
     #[error("{0}")]
