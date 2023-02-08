@@ -1,6 +1,6 @@
 use std::process::exit;
 
-use clap::{Parser, Subcommand, ValueEnum};
+use clap::{Parser, Subcommand};
 use log::{error, LevelFilter};
 use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode};
 
@@ -27,12 +27,12 @@ struct Args {
     wait: u64,
 }
 
-impl Into<Config> for Args {
-    fn into(self) -> Config {
+impl From<Args> for Config {
+    fn from(val: Args) -> Self {
         Config {
-            domain: self.domain,
-            records: self.record,
-            wait: self.wait,
+            domain: val.domain,
+            records: val.record,
+            wait: val.wait,
         }
     }
 }

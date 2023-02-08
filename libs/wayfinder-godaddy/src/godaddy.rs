@@ -8,7 +8,7 @@ use crate::{GodaddyArgs, GodaddyError};
 const GODADDY_URL: &str = "https://api.godaddy.com";
 
 /// Clones api key from config and formats it for Godaddy api.
-fn get_auth(config: &Config, args: &GodaddyArgs) -> String {
+fn get_auth(args: &GodaddyArgs) -> String {
     format!(
         "sso-key {}:{}",
         args.auth_key.clone(),
@@ -18,12 +18,12 @@ fn get_auth(config: &Config, args: &GodaddyArgs) -> String {
 
 /// Used for validating credentials are correct
 /// TODO: Return body, Currently only used for validating that auth credentials are correct.
-pub async fn get_all_domains(config: &Config, args: &GodaddyArgs) -> Result<(), GodaddyError> {
+pub async fn get_all_domains(args: &GodaddyArgs) -> Result<(), GodaddyError> {
     debug!("Getting all domains");
     let url: String = format!("{GODADDY_URL}/v1/domains");
     let response = reqwest::Client::new()
         .get(url)
-        .header("Authorization", get_auth(config, args))
+        .header("Authorization", get_auth(args))
         .send()
         .await?;
 
@@ -55,7 +55,7 @@ pub async fn get_domain(config: &Config, args: &GodaddyArgs) -> Result<Domain, G
     let url: String = format!("{GODADDY_URL}/v1/domains/{}", config.domain);
     let response = reqwest::Client::new()
         .get(url)
-        .header("Authorization", get_auth(config, args))
+        .header("Authorization", get_auth(args))
         .send()
         .await
         .unwrap();
@@ -92,7 +92,7 @@ pub async fn update_domain_record(
 
     let response = reqwest::Client::new()
         .put(url)
-        .header("Authorization", get_auth(config, args))
+        .header("Authorization", get_auth(args))
         .json(&data)
         .send()
         .await
@@ -120,7 +120,7 @@ pub async fn get_domain_record(
 
     let response = reqwest::Client::new()
         .get(url)
-        .header("Authorization", get_auth(config, args))
+        .header("Authorization", get_auth(args))
         .send()
         .await
         .unwrap();

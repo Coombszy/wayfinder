@@ -23,7 +23,7 @@ pub struct GodaddyArgs {
 }
 
 pub async fn main(config: &Config, args: &GodaddyArgs) -> Result<(), WayfinderError<GodaddyError>> {
-    check_auth(config, args).await?;
+    check_auth(args).await?;
     validate(config, args).await?;
 
     loop {
@@ -33,11 +33,8 @@ pub async fn main(config: &Config, args: &GodaddyArgs) -> Result<(), WayfinderEr
 }
 
 /// Check that credentials provided are correct.
-async fn check_auth(
-    config: &Config,
-    args: &GodaddyArgs,
-) -> Result<(), WayfinderError<GodaddyError>> {
-    match godaddy::get_all_domains(config, args).await {
+async fn check_auth(args: &GodaddyArgs) -> Result<(), WayfinderError<GodaddyError>> {
+    match godaddy::get_all_domains(args).await {
         Ok(_) => info!("Godaddy auth successful!"),
         Err(e) => return Err(WayfinderError::Godaddy(e)),
     }
