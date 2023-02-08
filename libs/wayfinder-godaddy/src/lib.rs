@@ -1,46 +1,43 @@
 use std::thread;
 use std::time::Duration;
 
+use clap::Parser;
 use godaddy::get_domain_record;
 use log::info;
 use thiserror::Error;
 use wayfinder_shared::{get_external_ip, Config, IpifyError, WayfinderError};
 
-use crate::godaddy::update_domain_records;
+use crate::godaddy::update_domain_record;
 
 mod godaddy;
 
-pub async fn main(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
-    validate_args(config)?;
-    check_auth(config).await?;
-    validate(config).await?;
+#[derive(Parser, Debug, Clone)]
+pub struct GodaddyArgs {
+    // / Authentication secret
+    #[arg(short = 's', long)]
+    auth_secret: String,
+
+    // / Authentication key (Required for registrars: Godaddy)
+    #[arg(short = 'k', long)]
+    auth_key: String,
+}
+
+pub async fn main(config: &Config, args: &GodaddyArgs) -> Result<(), WayfinderError<GodaddyError>> {
+    check_auth(config, args).await?;
+    validate(config, args).await?;
 
     loop {
-        tick(config).await?;
+        tick(config, args).await?;
         thread::sleep(Duration::from_secs(config.wait));
     }
 }
 
-fn validate_args(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
-    let mut error: Vec<String> = Vec::new();
-
-    if config.auth_key.is_none() {
-        error.push("Authentication key is requried for Godaddy".to_owned());
-    }
-
-    // If no errors
-    if error.is_empty() {
-        return Ok(());
-    }
-
-    Err(WayfinderError::Godaddy(GodaddyError::InvalidArgs(
-        error.join(", "),
-    )))
-}
-
 /// Check that credentials provided are correct.
-async fn check_auth(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
-    match godaddy::get_all_domains(config).await {
+async fn check_auth(
+    config: &Config,
+    args: &GodaddyArgs,
+) -> Result<(), WayfinderError<GodaddyError>> {
+    match godaddy::get_all_domains(config, args).await {
         Ok(_) => info!("Godaddy auth successful!"),
         Err(e) => return Err(WayfinderError::Godaddy(e)),
     }
@@ -49,9 +46,9 @@ async fn check_auth(config: &Config) -> Result<(), WayfinderError<GodaddyError>>
 }
 
 /// Validates that prequisites to manage the domain are in place.
-async fn validate(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
+async fn validate(config: &Config, args: &GodaddyArgs) -> Result<(), WayfinderError<GodaddyError>> {
     // if this fails, assume domain does not exist in user account
-    match godaddy::get_domain(config).await {
+    match godaddy::get_domain(config, args).await {
         Ok(_) => (),
         Err(e) => return Err(WayfinderError::Godaddy(e)),
     };
@@ -60,13 +57,13 @@ async fn validate(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
 }
 
 ///
-async fn tick(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
+async fn tick(config: &Config, args: &GodaddyArgs) -> Result<(), WayfinderError<GodaddyError>> {
     let external = match get_external_ip().await {
         Ok(ip) => ip,
         Err(e) => return Err(WayfinderError::Godaddy(GodaddyError::ExternalIp(e))),
     };
     for record in &config.records {
-        let mut entries = match get_domain_record(config, record).await {
+        let mut entries = match get_domain_record(config, args, record).await {
             Ok(d) => d,
             Err(e) => return Err(WayfinderError::Godaddy(e)),
         };
@@ -79,7 +76,7 @@ async fn tick(config: &Config) -> Result<(), WayfinderError<GodaddyError>> {
                     record, config.domain, entry.data, external
                 );
                 entry.data = external.clone();
-                match update_domain_records(config, record, &vec![entry.clone()]).await {
+                match update_domain_record(config, args, record, &vec![entry.clone()]).await {
                     Ok(_) => break,
                     Err(e) => return Err(WayfinderError::Godaddy(e)),
                 }

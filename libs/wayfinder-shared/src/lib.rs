@@ -12,8 +12,6 @@ pub enum WayfinderError<T> {
 }
 
 pub struct Config {
-    pub auth_key: Option<String>,
-    pub auth_secret: String,
     pub domain: String,
     pub records: Vec<String>,
     pub wait: u64,

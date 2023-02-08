@@ -1,17 +1,13 @@
 use std::process::exit;
 
-use clap::{Parser, ValueEnum};
+use clap::{Parser, Subcommand, ValueEnum};
 use log::{error, LevelFilter};
 use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode};
 
+use wayfinder_godaddy::GodaddyArgs;
 use wayfinder_shared::Config;
 
-#[derive(ValueEnum, Copy, Clone, Debug, PartialEq, Eq)]
-enum Registrars {
-    Godaddy,
-}
-
-#[derive(Parser, Debug)]
+#[derive(Parser, Debug, Clone)]
 #[command(author, version, about)]
 struct Args {
     /// Domain name
@@ -19,41 +15,43 @@ struct Args {
     domain: String,
 
     /// Record name(s)
-    #[arg(short, long)]
+    #[arg(short, long, required = true)]
     record: Vec<String>,
 
     /// Domain Registrar
-    #[arg(short = 'p', long)]
+    #[command(subcommand)]
     registrar: Registrars,
-
-    /// Authentication secret
-    #[arg(short = 's', long)]
-    auth_secret: String,
-
-    /// Authentication key (Required for registrars: Godaddy)
-    #[arg(short = 'k', long)]
-    auth_key: Option<String>,
 
     /// Time between checks/updates
     #[arg(short, long, default_value_t = 30)]
     wait: u64,
 }
 
+impl Into<Config> for Args {
+    fn into(self) -> Config {
+        Config {
+            domain: self.domain,
+            records: self.record,
+            wait: self.wait,
+        }
+    }
+}
+
+#[derive(Subcommand, Debug, Clone)]
+enum Registrars {
+    /// Manage domains registered with Godaddy
+    Godaddy(GodaddyArgs),
+}
+
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
     startup();
-    let c = Config {
-        auth_key: args.auth_key,
-        auth_secret: args.auth_secret,
-        domain: args.domain,
-        records: args.record,
-        wait: args.wait,
-    };
+    let config: Config = args.clone().into();
 
     match args.registrar {
-        Registrars::Godaddy => {
-            if let Err(e) = wayfinder_godaddy::main(&c).await {
+        Registrars::Godaddy(u_args) => {
+            if let Err(e) = wayfinder_godaddy::main(&config, &u_args).await {
                 error!("{}", e);
                 exit(1);
             }
