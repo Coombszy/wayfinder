@@ -1,5 +1,7 @@
 use std::{error::Error, process::exit};
 
+use log::{error, LevelFilter};
+use simplelog::{ColorChoice, CombinedLogger, TermLogger, TerminalMode};
 use wayfinder_shared::{Config, WayfindError};
 
 #[tokio::main]
@@ -8,13 +10,14 @@ async fn main() {
     let c = Config {
         auth_key: Some("".to_owned()),
         auth_secret: "".to_owned(),
-        domain: "".to_owned(),
-        wait: 20,
+        domain: "madvibes.uk".to_owned(),
+        records: vec!["@".to_owned()],
+        wait: 30,
     };
 
     // For now, run godaddy by default
     if let Err(e) = wayfinder_godaddy::main(&c).await {
-        eprintln!("{}", e);
+        error!("{}", e);
         exit(1);
     }
 }
@@ -29,11 +32,11 @@ fn startup() {
     println!("{} v{}", &ascii_name, &env!("CARGO_PKG_VERSION"));
     println!("================================================================");
 
-
-CombinedLogger::init(
-        vec![
-            TermLogger::new(LevelFilter::Warn, Config::default(), TerminalMode::Mixed, ColorChoice::Auto),
-            WriteLogger::new(LevelFilter::Info, Config::default(), File::create("my_rust_binary.log").unwrap()),
-        ]
-    ).unwrap();
+    CombinedLogger::init(vec![TermLogger::new(
+        LevelFilter::Info,
+        simplelog::Config::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    )])
+    .unwrap();
 }

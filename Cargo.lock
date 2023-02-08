@@ -1032,6 +1032,9 @@ dependencies = [
 name = "wayfinder-shared"
 version = "0.1.0"
 dependencies = [
+ "log",
+ "reqwest",
+ "serde",
  "thiserror",
 ]
 
