@@ -8,10 +8,10 @@ authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
 repository = "https://github.com/Coombszy/wayfinder"
 
 [dependencies]
+clap = { version = "4.1.4", features = ["derive", "env"] }
 tokio =  { version = "1.25.0", features = ["full"] }
 thiserror = "1.0.38"
 wayfinder-shared = {path = "libs/wayfinder-shared"}
 wayfinder-godaddy = {path = "libs/wayfinder-godaddy"}
 log = "0.4.17"
 simplelog = "0.12.0"
-clap = { version = "4.1.4", features = ["derive"] }

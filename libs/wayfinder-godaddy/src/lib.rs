@@ -14,11 +14,11 @@ mod godaddy;
 #[derive(Parser, Debug, Clone)]
 pub struct GodaddyArgs {
     // / Authentication secret
-    #[arg(short = 's', long)]
+    #[arg(short = 's', long, id = "WF_AUTH_SECRET", env = "WF_AUTH_SECRET")]
     auth_secret: String,
 
     // / Authentication key (Required for registrars: Godaddy)
-    #[arg(short = 'k', long)]
+    #[arg(short = 'k', long, id = "WF_AUTH_KEY", env = "WF_AUTH_KEY")]
     auth_key: String,
 }
 

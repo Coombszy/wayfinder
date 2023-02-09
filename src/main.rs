@@ -11,11 +11,11 @@ use wayfinder_shared::Config;
 #[command(author, version, about)]
 struct Args {
     /// Domain name
-    #[arg(short, long)]
+    #[arg(short, long, id = "WF_DOMAIN", env = "WF_DOMAIN")]
     domain: String,
 
     /// Record name(s)
-    #[arg(short, long, required = true)]
+    #[arg(short, long, required = true, id = "WF_RECORD", env = "WF_RECORD")]
     record: Vec<String>,
 
     /// Domain Registrar
@@ -23,7 +23,7 @@ struct Args {
     registrar: Registrars,
 
     /// Time between checks/updates
-    #[arg(short, long, default_value_t = 30)]
+    #[arg(short, long, default_value_t = 30, id = "WF_WAIT", env = "WF_WAIT")]
     wait: u64,
 }
 
