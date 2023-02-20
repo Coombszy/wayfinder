@@ -6,6 +6,7 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
 repository = "https://github.com/Coombszy/wayfinder"
+license = "MIT"
 
 [[bin]]
 name = "wayfinder"

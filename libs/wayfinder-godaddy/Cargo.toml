@@ -1,7 +1,11 @@
 [package]
 name = "wayfinder-godaddy"
+description = "Wayfinder dependency for Godaddy integration"
 version = "0.1.0"
 edition = "2021"
+authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
+repository = "https://github.com/Coombszy/wayfinder/tree/main/libs/wayfinder-godaddy"
+license = "MIT"
 
 [dependencies]
 clap = { version = "4.1.4", features = ["derive", "env"] }

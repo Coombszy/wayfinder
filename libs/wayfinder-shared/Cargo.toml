@@ -1,7 +1,11 @@
 [package]
 name = "wayfinder-shared"
+description = "Wayfinder shared"
 version = "0.1.0"
 edition = "2021"
+authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
+repository = "https://github.com/Coombszy/wayfinder/tree/main/libs/wayfinder-shared"
+license = "MIT"
 
 [dependencies]
 log = "0.4.17"
