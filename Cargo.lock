@@ -1187,6 +1187,8 @@ dependencies = [
 [[package]]
 name = "wayfinder-shared"
 version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "593d16354bd36fadd88de0880412b701e873ae4c2c2e1df22bb7dee527fcff2b"
 dependencies = [
  "log",
  "reqwest",
