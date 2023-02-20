@@ -22,7 +22,7 @@ struct Args {
     #[command(subcommand)]
     registrar: Registrars,
 
-    /// Time between checks/updates
+    /// Seconds between checks/updates
     #[arg(short, long, default_value_t = 30, id = "WF_WAIT", env = "WF_WAIT")]
     wait: u64,
 }

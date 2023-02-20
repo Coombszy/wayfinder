@@ -1,11 +1,15 @@
 [package]
-name = "wayfinder"
-description = "Wayfinder, The minimal, blazing-fast Dynamic DNS CLI tool."
+name = "wayfinder-dns"
+description = "Wayfinder, the minimal, blazing-fast Dynamic DNS CLI tool."
 keywords = ["CLI", "DNS", "Dynamic", "Godaddy"]
 version = "0.1.0"
 edition = "2021"
 authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
 repository = "https://github.com/Coombszy/wayfinder"
+
+[[bin]]
+name = "wayfinder"
+path = "src/main.rs"
 
 [dependencies]
 clap = { version = "4.1.4", features = ["derive", "env"] }
