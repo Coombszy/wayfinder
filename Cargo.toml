@@ -2,7 +2,7 @@
 name = "wayfinder-dns"
 description = "The minimal, blazing-fast Dynamic DNS CLI tool."
 keywords = ["CLI", "DNS", "Dynamic", "Godaddy"]
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Coombszy <LCCoombs@hotmail.co.uk>"]
 repository = "https://github.com/Coombszy/wayfinder"
